@@ -1,0 +1,534 @@
+<!doctype HTML>
+<html>
+    <head>
+        <title> AP U.S. History Exam - World War I </title>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Gothic+A1" rel="stylesheet">
+
+        <link href="https://fonts.googleapis.com/css?family=Tajawal" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Sunflower:300" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Jura" rel="stylesheet">
+
+        <style>
+
+            #display{
+                background-color: rgb(236, 236, 236);
+            }
+
+            #display .navbar{
+                margin-bottom: 0;
+                background-color: #a50000;
+                border: 0;
+                font-size: 13px;
+                letter-spacing: 4px;
+                border-radius: 0;
+            }
+
+            #display .navbar-nav li a, #display .navbar-brand{
+                color: #fff;
+            }
+
+            #display .navbar-nav li a:hover, #display .navbar-nav li.active a {
+                color: #331ef4;
+                background-color: #fff;
+            }
+
+            #display .navbar-default .navbar-toggle {
+                border-color: transparent;
+                color: #fff;
+            }
+
+            #display #current{
+                border-bottom: 2px solid white;
+            }
+
+            #display .jumbotron {
+                text-align: center;
+                height:300px;
+
+                /*background-image: url("https://forum.paradoxplaza.com/forum/data/nobita/teams/covers/0/74_1472643155_crop.jpg?1472643155");*/
+                /*Website blocked by NYC DOE*/
+
+                background-image: url("https://image.ibb.co/g5WmMT/74_1472643155_crop.jpg");
+                background-repeat: no-repeat;
+                background-size: 100% 300px;
+                font-family: 'Jura', sans-serif;
+                color: rgba(255, 255, 255, 0.84);
+            }
+
+            #display .jumbotron h1 {
+                text-align: center;
+                text-shadow: 1px 1px 15px #000;
+                /*vertical-align: middle;
+                line-height: 200px;*/ 
+            }
+            
+            #display .container-fluid {
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+
+            #firstww {
+                font-family: 'Tajawal', sans-serif;
+                font-size: 105%;
+                margin-left: 20px;
+                margin-right: 20px;
+            }
+
+            #display #t, #l{
+                font-size: 11px;
+            }
+
+            #display button{
+                margin:0 auto;
+                display:block;
+
+                padding:0.5em 3em;
+                border:0.16em solid rgb(81, 101, 192);
+                text-transform:uppercase;
+                font-family:'Roboto',sans-serif;
+                font-weight:400;
+                color:rgb(81, 101, 192);
+                text-align:center;
+                transition: all 0.15s;
+                background-color: rgba(255, 255, 255, 0);
+            }
+
+            #display button:hover{
+                color:rgb(34, 62, 190);
+                border-color:rgb(34, 62, 190);
+            }
+
+            #display .panel {
+                border: 1px solid #a50000;
+                /*border: 1px solid #0044ffd0;*/
+                /*border: 1px solid #0077ffd0;*/
+                /*border-radius:0;*/
+            }
+
+            #display .panel-heading {
+                color: #fff;
+                background-color: #a50000;
+                /*background-color: #0044ffd0;*/
+                /*background-color: #0077ffd0;*/
+                border-bottom: 1px solid transparent;
+                /*border-radius: 0px;*/
+            }
+
+            #firstww div{
+                border-bottom: 1px solid rgba(0, 0, 0, 0.315);
+                padding: 5px;
+                margin: 3px;
+                /*background-color: rgba(128, 128, 128, 0.2);*/
+            }
+
+            #check p{
+                padding: 5px;
+                margin: 3px;
+                border: 1px solid rgba(0, 0, 0, 0.315);
+                background-color: rgba(128, 128, 128, 0.2);
+                text-align: center;
+                font-family: 'Tajawal', sans-serif;
+                font-size: 110%;
+            }
+
+            h4{
+                font-weight: bold;
+            }
+
+            #quizHeader h4{
+                font-family: 'Tajawal', sans-serif;
+                text-align: center;
+                font-size: 20px;
+            }
+            
+            #quiz{
+                margin-top: 10px;
+            }
+
+
+        </style>
+
+        <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+        <script src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <script type="text/template" id="template">
+            <div class = "panel panel-default">
+                <div class = "panel-heading"> Question  {{qNum}}: {{info.Question}}</div>
+                <div class = "panel-body"> A. {{info.A}} </div>
+                <div class = "panel-body"> B. {{info.B}} </div>
+                <div class = "panel-body"> C. {{info.C}} </div>
+                <div class = "panel-body"> D. {{info.D}} </div>	
+                <div class = "panel-body"> E. {{info.E}} </div>	
+                <div class = "panel-footer">
+                    <input type="text" id="{{qKey}}" placeholder="Choice letter">
+                </div>
+            </div>
+        </script>
+
+        <script>
+            /*
+            A. Zheng, K. Xia, J. Hu
+            7 May 2018
+            */
+            var data;
+            function getData(){
+                $.getJSON("https://tutorial-project-9806b.firebaseio.com/FirstWorldWarQuiz/.json", function(result){
+                    data = result;
+                    displayQuiz();
+                })
+            }
+
+            function displayQuiz(){
+                var build="";
+                var questions=0;
+                var template = document.getElementById("template").innerHTML;
+
+                for (var key in data){
+                    questions++;
+                    quesJSON ={
+                        "info": data[key], 
+                        "qKey": key,
+                        "qNum": questions
+				    }
+                    build += Mustache.render(template, quesJSON);
+                    document.getElementById("quiz").innerHTML = build;
+                }
+            }
+
+            function checkAnswers(){
+                var score = 0;
+                var count = 0;
+                for (var key in data){
+                    var correctAns = data[key].Answer;
+                    var userAns = document.getElementById(key).value;
+                    count++;
+                    if (userAns.toUpperCase() == correctAns){
+                        score++;
+                    }
+                }
+                var grade = (score/count)*100;
+                
+                document.getElementById("check").innerHTML = "<p> You scored " + grade + "%. You answered " + score + " out of " + count + " questions correctly.";
+            }
+
+        </script>
+    </head>
+
+    <body id = "display" onload = "getData()">
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">AP U.S. History</a>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="index.htm"><span class="glyphicon glyphicon-home"></span>&nbsp Home</a></li>
+                        <li><a href="TutorialWebsiteColonialv2.html">Colonial Era</a></li>
+                        <li><a href="TutorialWebsiteImmigrationv2.html">Immigration</a></li>
+                        <li id="current"><a href="TutorialWebsiteFirstWorldWarv2.html">World War I</a></li>
+                        <li><a href="TutorialWebsiteSecondWorldWarv2.html">World War II</a></li>
+                        <li><a href="TutorialWebsiteAboutv2.html">About</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class = "jumbotron">
+            <h1>WORLD WAR I</h1>
+        </div>
+
+        <div class="container">
+                <div id="myCarousel" class="carousel slide" data-ride="carousel">
+
+                    <ol class="carousel-indicators">
+                        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#myCarousel" data-slide-to="1"></li>
+                        <li data-target="#myCarousel" data-slide-to="2"></li>
+                    </ol>
+                  
+
+                    <div class="carousel-inner">
+                        <div class="item active">
+                            <img src="http://nationalinterest.org/files/styles/main_image_on_posts/public/main_images/vickers_machine_gun_crew_with_gas_masks_0.jpg?itok=8vJMp3Jq" alt="World War I Machine Gun" style="width:100%;">
+                            <div class="carousel-caption">
+                                <h3>World War I Machine Gun</h3>
+                            </div>
+                        </div>
+                    
+                        <div class="item">
+                            <img src="https://cdn.history.com/sites/2/2013/12/british-soldiers-fighting-in-trenches-P.jpeg" alt="World War I Trench Warfare" style="width:100%;">
+                            <div class="carousel-caption">
+                                <h3>World War I Trench Warfare</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="item">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/First_call_I_need_you_in_the_Navy_this_minute%21_Our_country_will_always_be_proudest_of_those_who_answered_the_first_call._LCCN2001699144.jpg/800px-First_call_I_need_you_in_the_Navy_this_minute%21_Our_country_will_always_be_proudest_of_those_who_answered_the_first_call._LCCN2001699144.jpg" alt="World War I Navy Recruitment/Enlistment Poster" style="width:100%;">
+                            <div class="carousel-caption">
+                                <h3>World War I Navy Recruitment/Enlistment Poster</h3>
+                            </div>
+                        </div>
+                    </div>
+                  
+                    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div> 
+        
+        <div id = "firstww">
+            <div>
+                <h4>Long Term (Main) Causes of World War I</h4>
+                <ul>
+                    <li><i><u>Militarism (Military Buildups)</u></i>: The industrial revolution allowed the world's countries to build huge militaries.</li>
+                    <ul>
+                        <li>New technology had been developed by Europe and the U.S.
+                            <ul>
+                                <li>Airplanes, tanks, machine guns, poisonous gas, barbed wire, iron warships, submarines.</li>
+                            </ul>
+                        </li>
+                        <li>The world powers feared their enemies' strength.</li>
+                        <li>Fear fueled the buildup.</li>
+                    </ul>
+                    <li><i><u>Secret Alliances</u></i>: The powers of Europe signed secret treaties with each other.
+                        <ul>
+                            <li>In the event of war, they would come to each others' side.</li>
+                            <li>European nations did not realize that a small war could turn into a global war.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Nationalism</u></i>: to be proud of your nation/nationality.
+                        <ul>
+                            <li>Europe was divided into many large kingdoms. Within each were many nationalities.</li>
+                            <li>Some nationalities were split between different kingdoms and/or countries.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Imperialism/Colonialism</u></i>: the great powers of Europe has gobbled up the world into their colonial empires.
+                        <ul>
+                            <li>France and Britain controlled almost 1/2 of the world.</li>
+                            <li>Germany and Austria-Hungary were jealous of that power.</li>
+                            <li>The U.S. had taken colonies too.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4>Short-Term (Immediate) Cause of World War I</h4>
+                <ul>
+                    <li><i><u>Assassination</u></i> of the Archduke (6/28/1914)
+                        <ul>
+                            <li>Archduke <i><u>Franz Ferdinand</u></i> was next in line to be king of Austria-Hungary.</li>
+                            <li>He and his wife were killed by a Serbian agent.</li>
+                            <li>Austria-Hungary and Germany declared war on Serbia.</li>
+                            <li>Russia and France declared war on Austria-Hungary and Germany.</li>
+                            <li>Germany invaded France through neutral Belgium.</li>
+                            <li>Britain declared war on Germany.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4>The Two Sides</h4>
+                <ul>
+                    <li><i><u>Allied Powers</u></i>
+                        <ul>
+                            <li>France, Great Britain, Russia</li>
+                            <li>Joined later: U.S, Italy, Japan</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Central Powers</u></i>
+                        <ul>
+                            <li>Germany, Austria-Hungary, Ottoman Empire</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4>World War I on the Land and Air</h4>
+                <ul>
+                    <li>Germany got within 15 miles of Paris.</li>
+                    <li>The war <i><u>stalemated</u></i> into trench warfare.</li>
+                    <li>New weapons such as tanks, airplanes, and poison gas were used to break the stalemate.</li>
+                </ul>
+            </div>
+            <div>
+                <h4>World War I on the Seas</h4>
+                <ul>
+                    <li>The British Navy was the world's most powerful. It was used to blockade German harbors to trade.</li>
+                    <li>Germany developed submarines (U-Boats) to sink British ships.</li>
+                </ul>
+            </div>
+            <div>
+                <h4>The U.S Stays Out</h4>
+                <ul>
+                    <li>President Wilson declared the U.S neutral.
+                        <ul>
+                            <li>At the same time he secretly shipped arms/supplies to the allies.</li>
+                        </ul>
+                    </li>
+                    <li>America was isolated from Europe.</li>
+                    <li>Many Americans had European relatives.</li>
+                    <li>German submarines blocked British ports.</li>
+                    <li>On May 17th, 1915, the British Liner <i><u>"Lusitania"</u></i> (a passenger ship) was torpedoed off of Ireland.
+                        <ul>
+                            <li>Sank in 15 minutes.</li>
+                            <li>1000 people were killed.</li>
+                            <li>128 Americans died.</li>
+                            <li>Germany claimed the ship carried munitions (later determined to be correct)</li>
+                        </ul>
+                    </li>
+                    <li>On March 24, 1916, a German U-boat submarine attacked the French passenger steamer Sussex, in the English Channel, thinking it was a British ship equipped to lay explosive mines. Although the ship did not sink, 50 people were killed, and many more injured, including several Americans.
+                        <ul>
+                            <li>Early in 1915, Germany had instituted a policy of unrestricted submarine warfare, allowing armed merchant ships, but not passenger ships, to be torpedoed without warning.</li>
+                            <li>The <i><u>Sussex Pledge</u></i> was a promise made by Germany to the United States on May 4, 1916, during World War I before the latter entered the war, in which Germany agreed to give adequate warning before sinking merchant and passenger ships and to provide for the safety of passengers and crew.</li>
+                            <li>The pledge was upheld until February 1917, when unrestricted submarine warfare was resumed.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4>The Election of 1916</h4>
+                <ul>
+                    <li>Wilson declared U.S. neutrality in 1914.</li>
+                    <li>He secretly ordered weapons and money to be sent to the <i><u>Allied Powers</u></i> (Britain, France, and Russia).</li>
+                    <li>Barely got reelected in 1916, his slogan was "He Kept Us Out Of War".</li>
+                </ul>
+            </div>
+            <div>
+                <h4>The U.S. Enters World War I</h4>
+                <ul>
+                    <li>British spies intercepted the <i><u>Zimmerman Telegram</u></i> from Germany to Mexico.</li>
+                    <li>Germany tried to get Mexico to join the Central Powers.</li>
+                    <li>Promised Mexico the Southern U.S. if they joined and won.</li>
+                    <li>Germany ignored U.S. neutrality and sank many U.S. ships.</li>
+                    <li>Wilson declared war on Germany on April 6, 1917.</li>
+                    <li><i><u>Selective Service Act (1917)</u></i>: Authorized President Woodrow Wilson to raise an infantry force from the general population of no more than four divisions, and it created the Selective Service System.
+                        <ul>
+                            <li>This act required all men between 21-30 years to register for the military.</li>
+                            <li>Each received a number, and draftees were chosen like a lottery.</li>
+                            <li>In contrast to the Union's Civil War conscription, there was no way for men to "opt out" of this draft.</li>
+                        </ul>
+                    </li>
+                    <li>The U.S. fought for less than a year.</li>
+                    <li>Germany realized it could not win with the U.S. in the war.</li>
+                    <li>The Central Powers officially surrendered on November 11, 1918.</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Fighting in the Great War</h4>
+                <ul>
+                    <li><i><u>Trench Warfare</u></i>: Most of the fighting occurred in man-made trenches.</li>
+                    <li><i><u>Christmas Truce</u></i>: December 1914, fighting temporarily stopped.</li>
+                    <li><i><u>Chemical Warfare</u></i>: Mustard Gas</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Domestic Issues During the War</h4>
+                <ul>
+                    <li><i><u>Creel Committee</u></i>: Journalist George Creel helped promote the war effort.
+                        <ul>
+                            <li>“Four-Minute Men” gave speeches throughout the US.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Espionage Act of 1917</u></i>: Sought to prevent interference with military operations (including the draft)
+                        <ul>
+                            <li>Upheld by <i><u>Schenk v. US</u></i> in 1919</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Sedition Act of 1918</u></i>: Made it illegal to criticize the government.
+                        <ul>
+                            <li>Used to convict Eugene Debs.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4>Women, African Americans, And Labor Unions During The War</h4>
+                <ul>
+                    <li>Women
+                        <ul>
+                            <li>Women worked in factories and nurses.</li>
+                            <li>Helped lead to the passage of the <i><u>19th Amendment</u></i>.</li>
+                        </ul>
+                    </li>
+                    <li>African Americans
+                        <ul>
+                            <li>Fought in segregated units, mostly did manual labor.</li>
+                            <li><i><u>W.E.B. Du Bois</u></i> supported the war – hoped for improved rights for African-Americans.</li>
+                        </ul>
+                    </li>
+                    <li>Labor Unions
+                        <ul>
+                            <li><i><u>National War Labor Board</u></i>: Helped oversea disputes</li>
+                            <li><i><u>American Federation of Labor (AFL)</u></i> - led by Samuel Gompers: Did not strike during war.</li>
+                            <li><i><u>Industrial Workers of the World (IWW)</u></i>: Nicknamed "I won't work".</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4>Wilson's 14 Point Plan for Peace</h4>
+                <ul>
+                    <li>Wilson went to France to sign the peace treaty (<i><u>Treaty of Versailles</u></i>). <a href="#TreatyofVersailles" id="t">(See Treaty of Versailles)</a></li>
+                    <li>Wilson outlined 14 ideas for post World War I World</li>
+                    <li>Sought to make the world “safe for democracy”</li>
+                    <li>He warned the Allies (France and Britain) to treat the defeated Central Powers with respect.</li>
+                    <li>Called for the creation of several new nations to prevent future nationalism.</li>
+                    <li>Called for nations to reduce their armed forces.</li>
+                    <li>No secret alliances, freedom of seas, etc.</li>
+                    <li>Called for the creation of a <i><u>"League of Nations"</u></i> to talk out future problems instead of fighting. <a href="#LeagueofNations" id="l">(See Treaty of Versailles - League of Nations)</a></li>
+                    <li>He won the Nobel Peace Prize.</li>
+                </ul>
+            </div>
+            <div>
+                <h4 id="TreatyofVersailles">Treaty of Versailles</h4>
+                <ul>
+                    <li><i><u>“War-Guilt” Clause</u></i>: Article 231 punished Germany for starting the war.</li>
+                    <li id="LeagueofNations"><i><u>League of Nations</u></i>: Article X – called for members to give assistance to others if needed.
+                        <ul>
+                            <li>Congress detested this stipulation.</li>
+                        </ul>
+                    </li>
+                    <li>Every nation that had fought on the Allied side in the war was represented.</li>
+                    <li>Germany was disarmed and stripped of its colonies in Asia and Africa. it was also forced to admit guilt for the war, accept French occupation of the Rhineland for 15 years, and pay a huge sum of money in <i><u>reparations</u></i> to Great Britain and France.</li>
+                    <li>Territories once controlled by Germany, Austria-Hungary, and Russia were taken by the Allies, independence was granted to Estonia, Latvia, Lithuania, Finland, and Poland, and the new nations of Czechoslavakia and Yugoslavia were established.</li>
+                    <li>Signers of the treaty would join an international peacekeeping organization, the League of Nations. This league called on each member nation to stand ready to protect the independence and territorial integrity of other nations.</li>
+                </ul>
+            </div>
+            <div>
+                <h4>U.S. Rejects Wilson's Plans</h4>
+                <ul>
+                    <li>By World War I's end, Wilson was very unpopular in America.</li>
+                    <li>Congress was reluctant to approve the World War I peace treaty of the League of Nations.</li>
+                    <li>While campaigning for his peace ideas, he suffered a massive stroke.</li>
+                    <li>Congress rejected all of his peace plans.</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Effects of World War I</h4>
+                <ul>
+                    <li>US Reverts to <i><u>Isolation</u></i>: Harding (1920) campaigned on a “Return to Normalcy”.</li>
+                    <li><i><u>"Red Summer"</u></i>: Race riots in Northern cities - "Great Migration".</li>
+                    <li><i><u>First Red Scare</u></i>: Fear of <i><u>communism</u></i></li>
+                    <li>Increase in nativism.</li>
+                </ul>
+            </div>
+        </div>
+
+        <br>
+        <div id = "quizHeader"><h4>World War I Quiz</h4></div>
+        <br>
+        <div class = "container" id = "quiz"></div>
+        <button onclick="checkAnswers()">Check Answers</button><br>
+        <div id = "check"></div>
+    </body>
+</html>

@@ -1,0 +1,470 @@
+<!doctype HTML>
+<html>
+    <head>
+        <title> AP U.S. History Exam - Immigration </title>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Gothic+A1" rel="stylesheet">
+
+        <link href="https://fonts.googleapis.com/css?family=Tajawal" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Sunflower:300" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Jura" rel="stylesheet">
+
+        <style>
+
+            #display{
+                background-color: rgb(236, 236, 236);
+            }
+
+            #display .navbar{
+                margin-bottom: 0;
+                background-color: #a50000;
+                border: 0;
+                font-size: 13px;
+                letter-spacing: 4px;
+                border-radius: 0;
+            }
+
+            #display .navbar-nav li a, #display .navbar-brand{
+                color: #fff;
+            }
+
+            #display .navbar-nav li a:hover, #display .navbar-nav li.active a {
+                color: #331ef4;
+                background-color: #fff;
+            }
+
+            #display .navbar-default .navbar-toggle {
+                border-color: transparent;
+                color: #fff;
+            }
+
+            #display #current{
+                border-bottom: 2px solid white;
+            }
+
+            #display .jumbotron {
+                text-align: center;
+                height:300px;
+                background-image: url("https://assets.libertyellisfoundation.org/cms/editor/New_Header_[Resized_826_x_300].jpg");
+                background-repeat: no-repeat;
+                background-size: 100% 300px;
+                font-family: 'Jura', sans-serif;
+                color: rgba(255, 255, 255, 0.84);
+            }
+
+            #display .jumbotron h1 {
+                text-align: center;
+                text-shadow: 1px 1px 15px #000;
+                /*vertical-align: middle;
+                line-height: 200px;*/ 
+            }
+            
+            #display .container-fluid {
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+
+            #immigration {
+                font-family: 'Tajawal', sans-serif;
+                font-size: 105%;
+                margin-left: 20px;
+                margin-right: 20px;
+            }
+
+            #display #i, #iD{
+                font-size: 11px;
+            }
+
+            #display button{
+                margin:0 auto;
+                display:block;
+
+                padding:0.5em 3em;
+                border:0.16em solid rgb(81, 101, 192);
+                text-transform:uppercase;
+                font-family:'Roboto',sans-serif;
+                font-weight:400;
+                color:rgb(81, 101, 192);
+                text-align:center;
+                transition: all 0.15s;
+                background-color: rgba(255, 255, 255, 0);
+            }
+
+            #display button:hover{
+                color:rgb(34, 62, 190);
+                border-color:rgb(34, 62, 190);
+            }
+
+            #display .panel {
+                border: 1px solid #a50000;
+                /*border: 1px solid #0044ffd0;*/
+                /*border: 1px solid #0077ffd0;*/
+                /*border-radius:0;*/
+            }
+
+            #display .panel-heading {
+                color: #fff;
+                background-color: #a50000;
+                /*background-color: #0044ffd0;*/
+                /*background-color: #0077ffd0;*/
+                border-bottom: 1px solid transparent;
+                /*border-radius: 0px;*/
+            }
+
+            #immigration div{
+                border-bottom: 1px solid rgba(0, 0, 0, 0.315);
+                padding: 5px;
+                margin: 3px;
+                /*background-color: rgba(128, 128, 128, 0.2);*/
+            }
+
+            #check p{
+                padding: 5px;
+                margin: 3px;
+                border: 1px solid rgba(0, 0, 0, 0.315);
+                background-color: rgba(128, 128, 128, 0.2);
+                text-align: center;
+                font-family: 'Tajawal', sans-serif;
+                font-size: 110%;
+            }
+
+            h4{
+                font-weight: bold;
+            }
+
+            #quizHeader h4{
+                font-family: 'Tajawal', sans-serif;
+                text-align: center;
+                font-size: 20px;
+            }
+            
+            #quiz{
+                margin-top: 10px;
+            }
+
+
+        </style>
+
+        <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+        <script src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <script type="text/template" id="template">
+            <div class = "panel panel-default">
+                <div class = "panel-heading"> Question  {{qNum}}: {{info.Question}}</div>
+                <div class = "panel-body"> A. {{info.A}} </div>
+                <div class = "panel-body"> B. {{info.B}} </div>
+                <div class = "panel-body"> C. {{info.C}} </div>
+                <div class = "panel-body"> D. {{info.D}} </div>	
+                <div class = "panel-body"> E. {{info.E}} </div>	
+                <div class = "panel-footer">
+                    <input type="text" id="{{qKey}}" placeholder="Choice letter">
+                </div>
+            </div>
+        </script>
+
+        <script>
+            /*
+            A. Zheng, K. Xia, J. Hu
+            7 May 2018
+            */
+            var data;
+            function getData(){
+                $.getJSON("https://tutorial-project-9806b.firebaseio.com/ImmigrationQuiz/.json", function(result){
+                    data = result;
+                    displayQuiz();
+                })
+            }
+
+            function displayQuiz(){
+                var build="";
+                var questions=0;
+                var template = document.getElementById("template").innerHTML;
+
+                for (var key in data){
+                    questions++;
+                    quesJSON ={
+                        "info": data[key], 
+                        "qKey": key,
+                        "qNum": questions
+				    }
+                    build += Mustache.render(template, quesJSON);
+                    document.getElementById("quiz").innerHTML = build;
+                }
+            }
+
+            function checkAnswers(){
+                var score = 0;
+                var count = 0;
+                for (var key in data){
+                    var correctAns = data[key].Answer;
+                    var userAns = document.getElementById(key).value;
+                    count++;
+                    if (userAns.toUpperCase() == correctAns){
+                        score++;
+                    }
+                }
+                var grade = (score/count)*100;
+                
+                document.getElementById("check").innerHTML = "<p> You scored " + grade + "%. You answered " + score + " out of " + count + " questions correctly.";
+            }
+
+        </script>
+    </head>
+
+    <body id = "display" onload = "getData()">
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">AP U.S. History</a>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="index.htm"><span class="glyphicon glyphicon-home"></span>&nbsp Home</a></li>
+                        <li><a href="TutorialWebsiteColonialv2.html">Colonial Era</a></li>
+                        <li id="current"><a href="TutorialWebsiteImmigrationv2.html">Immigration</a></li>
+                        <li><a href="TutorialWebsiteFirstWorldWarv2.html">World War I</a></li>
+                        <li><a href="TutorialWebsiteSecondWorldWarv2.html">World War II</a></li>
+                        <li><a href="TutorialWebsiteAboutv2.html">About</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class = "jumbotron">
+            <h1>IMMIGRATION</h1>
+        </div>
+
+        <div class="container">
+                <div id="myCarousel" class="carousel slide" data-ride="carousel">
+
+                    <ol class="carousel-indicators">
+                        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#myCarousel" data-slide-to="1"></li>
+                        <li data-target="#myCarousel" data-slide-to="2"></li>
+                    </ol>
+                  
+
+                    <div class="carousel-inner">
+                        <div class="item active">
+                            <img src="http://www.boweryboyshistory.com/wp-content/uploads/2017/03/1-3.jpg" alt="Old Immigration to America" style="width:100%;">
+                            <div class="carousel-caption">
+                                <h3>Old Immigration to America</h3>
+                            </div>
+                        </div>
+                    
+                        <div class="item">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Immigrant-children-ellis-island.jpg" alt="New Immigration to America at Ellis Island" style="width:100%;">
+                            <div class="carousel-caption">
+                                <h3>New Immigration to America at Ellis Island</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="item">
+                            <img src="https://abagond.files.wordpress.com/2016/06/nativistflag02.jpg" alt="Know-Nothing Party" style="width:100%;">
+                            <div class="carousel-caption">
+                                <h3>Know-Nothing Party</h3>
+                            </div>
+                        </div>
+                    </div>
+                  
+                    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div> 
+        
+        <div id = "immigration">
+            <div>
+                <h4>Immigration Factors</h4>
+                <ul>
+                    <li><i><u>Pull Factors</u></i>: Something good in America is pulling immigrants in.</li>
+                    <li><i><u>Push Factors</u></i>: Something bad in an immigrant's home country is pushing them out.</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Old Immigration</h4>
+                <ul>
+                    <li>During the 1820s to 1870s, there was a giant wave of immigrants coming to the US.</li>
+                    <li>They mainly came from Northern and Western Europe.
+                        <ul>
+                            <li>Ireland, Germany, and England.</li>
+                            <li>The group that made of the most amount of immigrants prior to the Civil War was the Irish.</li>
+                        </ul>
+                    </li>
+                    <li>Reasons for coming to the US:
+                        <ul>
+                            <li>Germans – farmers looking for land.</li>
+                            <li>Irish – Potato Famine (1840s) "Black Forties".<a href="#IrishPotatoFamine" id="i">(See The Great Irish Potato Famine (The 1840's))</a></li>
+                        </ul>
+                    </li>
+                    <li>Settlement: 
+                        <ul>
+                            <li>Germans settled on the frontier and the Midwest and Northwest.
+                                <ul>
+                                    <li>Ohio, Wisconsin, etc.</li>
+                                    <li>Germans influenced the development of American education system. They were responsible for the introduction of the idea of Kindergarten to America.</li>
+                                </ul>
+                            </li>
+                            <li>Irish settled in large cities in the Northeast.
+                                <ul>
+                                    <li>Boston and New York</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4>Nativism</h4>
+                <ul>
+                    <li><i><u>Nativism</u></i> was the fear, distrust, and hatred of foreigners.</li>
+                    <li>Reasons for nativism during the Old Immigration:
+                        <ul>
+                            <li>Different cultures</li>
+                            <li>Different languages</li>
+                            <li>Religion <a href="#IrishDiscrimination" id="iD">(See Irish Discrimination in America)</a></li>
+                            <li>Irish and Germans "stole" elections
+                                <ul>
+                                    <li>They tend to vote for the Democratic party, such as the political machine of New York - Tammany Hall (located in New York City).</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>The <i><u>"Know-Nothing" Party</u></i>: political party formed due to nativism. They were opposed to immigration.
+                        <ul>
+                            <li>Originated as the Supreme Order of the Star-Spangle Banner.</li>
+                            <li>Wanted to ban Catholics from holding offices.</li>
+                            <li>Called for tougher immigration and naturalization laws.</li>
+                            <li>In 1856, Ex-President <i><u>Millard Fillmore</u></i> ran for President of the Know-Nothing Party. (Won 21% of the popular vote)</li>
+                            <li>By 1860, they were no longer a political threat.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4 id="IrishPotatoFamine">The Great Irish Potato Famine (The 1840's)</h4>
+                <ul>
+                    <li>A blight (fungus) grew on Ireland's main crop.</li>
+                    <li>British landloards evicted Irish tenants as they were unable to pay their rent since most relied on potatoes for a living.</li>
+                    <li>Mass starvation occured.</li>
+                    <li>More than half of the population died or left to America.</li>
+                </ul>
+            </div>
+            <div>
+                <h4 id="IrishDiscrimination">Irish Discrimination in America</h4>
+                <ul>
+                    <li>Americans resented the Irish form of Christianity: The Roman Catholic Church. Many Americans belived that Catholics were only loyal to the Pope in Rome, Italy.</li>
+                    <li>Irish were denied jobs and housings. Employers would post signs with <i><u>N.I.N.A</u></i> written on them - No Irish Needed Apply.</li>
+                    <li>Many Americans viewed the Irish as sub-human animals. In drawings, they would exaggerate compare Irish facial features to those of a monkey or gorilla.</li>
+                    <li>Irish competed with free Blacks for jobs and housings (which caused tensions).</li>
+                    <li>Those opposed to immigration were known as "Native Americans" or "Nativists". Nativists formed the "American" politcal party which as also known as the "Know-Nothings".</li>
+                </ul>
+            </div>
+            <div>
+                <h4>New Immigration</h4>
+                <ul>
+                    <li>During the 1880s to 1920, there was a second giant wave of immigrants coming to the US.</li>
+                    <li>They mainly came from Southern and Eastern Europe.
+                        <ul>
+                            <li>Poland, Italy, Greece, Hungary, etc.</li>
+                        </ul>
+                    </li>
+                    <li>Reasons for coming to the US:
+                        <ul>
+                            <li>Economic opportunities – During this era, America was going through an era of rapid industrialization, meaning there was more factory jobs available.
+                                <ul>
+                                    <li>Some came for a short time – "Birds of Passage".</li>
+                                </ul>
+                            </li>
+                            <li>There was a lack of military conscriptions in America.</li>
+                            <li>U.S. Freedom and Tolerance – Immigrants sought religious, ethnic, and political freedom.
+                                <ul>
+                                    <li>Jews were escaping religious persecution.</li>
+                                </ul>
+                            </li>
+                            <li><i><u>Westward Expansion</u></i>: The U.S government wanted western lands settled.</li>
+                            <li>Steamships made ocean crossings much faster and safer.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Ellis Island</u></i> Open Its Doors (1886): The Ellish Island Processing Center opened in NYC. Ships dropped off immigrants at the island.
+                        <ul>
+                            <li>Citizenship paperwork was filled out.</li>
+                            <li>Health check-ups were given.</li>
+                            <li>Those ok'ed to enter moved into NYC ghettos or boarded trains to other places.</li>
+                        </ul>
+                    </li>
+                    <li>Settlement: 
+                        <ul>
+                            <li>Overwhelmingly in urban areas.</li>
+                            <li>New Immigrants crowded together in ethnic neighborhoods known as <i><u>ghettos</u></i>, such as (in NYC): Chinatown, Little Italy, Germantown, and Lower East Side (Jewish)</li>
+                            <li>Most lived in small apartment buildings called <i><u>tenements</u></i>.</li>
+                            <li>Tenements were crowded, unhealthy, and unsafe.</li>
+                            <li>Neighborhoods crowded with tenements were called <i><u>slums</u></i>.</li>
+                        </ul>
+                    </li>
+                    <li>Challenges:
+                        <ul>
+                            <li>Many immigrants had a hard time <i><u>assimilating</u></i> or adjusting to American life. They spoke different languages, were illiterate, and lived in ghettos.</li>
+                            <li>New immigrants often worked in unskilled job, meaning low wages.</li>
+                            <li>Political bosses often gave immigrants jobs and resources in return for their vote.</li>
+                        </ul>
+                    </li>
+                    <li>U.S. Cities Grow Out Of Control:
+                        <ul>
+                            <li>In the late 1800's to the early 1900's, immigrants caused city populations to explode.</li>
+                            <li>City governments couldn't build public facilities fast enough, such as: sewers, roads, hospitals, an schools.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4>Reaction to New Immigration</h4>
+                <ul>
+                    <li><i><u>Jane Addams</u></i> – Chicago
+                        <ul>
+                            <li>Founder of the Hull House.</li>
+                            <li>Provided housing, food, and education for poor women and immigrants.</li>
+                            <li>Helped spur other settlement houses.</li>
+                        </ul>
+                    </li>
+                    <li>Nativism: fear, distrust, and hatred of foreigners.
+                        <ul>
+                            <li>Immigrants were "taking" jobs.</li>
+                            <li>Fear of the Pope having control in politics.</li>
+                            <li>Different government ideas – <i><u>socialism</u></i> and <i><u>anarchism</u></i>.</li>
+                            <li><i><u>American Protective Association (APA)</u></i>: Urged voting against Catholics. Favored tougher immigration laws.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4>Immigration Laws of 1920's</h4>
+                <ul>
+                    <li><i><u>Emergency Quota Act of 1921</u></i>: Restricted number of immigrants from a country to 3% of total people from that country living in US in 1910.
+                        <ul>
+                            <li>Favored Southern and Eastern Europe.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>National Origins Act of 1924</u></i>: Quotas for foreigners was cut from 3% to 2%, used 1890s census instead, hurt "New Immigrants".</li>
+                    <li>These two acts signified an end to previously unrestricted immigration.</li>
+                </ul>
+            </div>
+        </div>
+
+        <br>
+        <div id = "quizHeader"><h4>Immigration Quiz</h4></div>
+        <br>
+        <div class = "container" id = "quiz"></div>
+        <button onclick="checkAnswers()">Check Answers</button><br>
+        <div id = "check"></div>
+    </body>
+</html>

@@ -1,0 +1,211 @@
+<!doctype HTML>
+<html>
+    <head>
+        <title> AP U.S. History Exam - Home </title>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Gothic+A1" rel="stylesheet">
+
+        <link href="https://fonts.googleapis.com/css?family=Tajawal" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Sunflower:300" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Jura" rel="stylesheet">
+
+        <style>
+            #display{
+                background-color: rgb(236, 236, 236);
+            }
+
+            #display .navbar{
+                margin-bottom: 0;
+                background-color: #a50000;
+                border: 0;
+                font-size: 13px;
+                letter-spacing: 4px;
+                border-radius: 0;
+            }
+
+            #display .navbar-nav li a, #display .navbar-brand{
+                color: #fff;
+            }
+
+            #display .navbar-nav li a:hover, #display .navbar-nav li.active a {
+                color: #331ef4;
+                background-color: #fff;
+            }
+
+            #display .navbar-default .navbar-toggle {
+                border-color: transparent;
+                color: #fff;
+            }
+
+            #display #current{
+                border-bottom: 2px solid white;
+            }
+
+            #display .jumbotron{
+                text-align: center;
+                height:300px;
+                background-image: url("https://media.shellypalmer.com/wp-content/images/2016/07/1776painting.jpg");
+                background-repeat: no-repeat;
+                background-size: 100% 300px;
+                font-family: 'Jura', sans-serif;
+                color: rgba(255, 255, 255, 0.84);
+            }
+            #display .jumbotron h1{
+                text-align: center;
+                text-shadow: 1px 1px 15px #000;
+                /*vertical-align: middle;
+                line-height: 200px;*/ 
+            }
+
+            #display img{
+                width: 100%;
+                height: auto;
+
+                padding: 10px;
+                border: 1px solid rgb(97, 90, 89);
+                background-color: rgba(255, 255, 255, 0.493);
+                margin-top: 40px;
+            }
+            
+            #display .container-fluid{
+                margin-top: 10px;
+                margin-bottom: 10px;
+                font-family: 'Tajawal', sans-serif;
+                font-size: 105%;
+            }
+
+            #desc{
+                font-family: 'Tajawal', sans-serif;
+                margin-left: 10px;
+                font-size: 105%;
+            }
+
+            #partA, #partB, #partC, #partD{
+                list-style-type: square;
+            }
+        </style>
+
+        <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+        <script src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <script>
+            /*
+            A. Zheng, K. Xia, J. Hu
+            7 May 2018
+            */
+
+        </script>
+    </head>
+
+    <body id = "display">
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">AP U.S. History</a>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li id="current"><a href="index.htm"><span class="glyphicon glyphicon-home"></span>&nbsp Home</a></li>
+                        <li><a href="TutorialWebsiteColonialv2.html">Colonial Era</a></li>
+                        <li><a href="TutorialWebsiteImmigrationv2.html">Immigration</a></li>
+                        <li><a href="TutorialWebsiteFirstWorldWarv2.html">World War I</a></li>
+                        <li><a href="TutorialWebsiteSecondWorldWarv2.html">World War II</a></li>
+                        <li><a href="TutorialWebsiteAboutv2.html">About</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class = "jumbotron">
+            <h1>AP US HISTORY REVIEW</h1>
+        </div>
+
+        <div id = "desc">
+            <p>
+                AP US History is one of the hardest AP class and test with a 50.9% probability of getting passing (3+) score as of 2017. 
+                The website will review several essential topics from the AP exam and prepare them for the multiple choice section of the exam through practice questions (quiz) at the end of each topic. 
+                This can both serve as last-minute review or long-term extensive lessons on topics for AP US History, better preparing students for the exam in the coming week.
+            </p>
+        </div>
+
+        <div class = "container-fluid">
+            <div class = "row">
+                <div class = "col-sm-8">
+                    <div>
+                        <h4>Tips for Studying:</h4>
+                        <ul>
+                            <li><b>Start Studying Early, Don't Cram:</b> Cramming may not be the most effective way to study for an exam. 
+                            It will be harder to retain the knowledge since your brain would be overwhelmed with a lot of information. 
+                            Having to cover multiple materials all at once will stress you out, affecting your performance on the test. 
+                            Pulling all-nighters or losing sleep to review materials the day(s) before the exam will also hinder your ability to concentrate. 
+                            It will be a better idea to start early to better understand the different materials you are learning, 
+                            and extra time will allow for more time to review along with taking practice tests.</li>
+                            <li><b>Practice Using Actual AP Test Questions:</b> Knowing the structure of the tests and questions that will be asked will be a great way to prepare for the test. 
+                            This way, you can assess the level of difficulty and adapt to the types of questions so you're more comfortable with it. 
+                            You will also get a sense of feeling of what and how the questions will be asked on the actual AP exam, and be prepared to answer it.</li>
+                            <li><b>Study in a Similar Testing Environment:</b> Being comfortable with an environment is a good way to allow your brain to relax. 
+                            Your brain would be adapted to the environment and thus, it will be easier for you to concentrate. 
+                            Knowing the testing environment beforehand would also reduce anxiety and/or nervosity.</li>
+                            <li><b>Ask Your Teacher to Clarify Any Questions:</b> If you have any questions that needs to be clarified, be sure to have it sorted out before taking the test! 
+                            You will never know when an information would come in handy. Better understanding the material will increase the chance of passing the AP exam or scoring a higher score. 
+                            Additionally, the information that you asked to be clarified may be used for the short response or essay parts of the AP exam. 
+                            Background or outside information is required in, especially, the essay part of the AP exam, and it will be a good idea to include some in the short response as well. 
+                            This will demonstrate to the graders of your exam that you truly comprehend the material(s) and increase the chance of getting a higher grade on the written part of the test.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class = "col-sm-4">
+                    <div>
+                        <img src = "https://i0.wp.com/www.oxbridgeacademy.edu.za/blog/wp-content/uploads/2015/07/CN63QSUO8C.jpg?resize=1280%2C640&ssl=1">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class = "container-fluid">
+            <div class = "row">
+                <div class = "col-sm-8">
+                    <h2>Structure of the Test</h2>
+                    <p>The AP U.S. History Exam is 3 hours and 15 minutes long and has a multiple choice/short answer section and a free response section. Each section is divided into two parts.</p>
+                    <h3>Section 1</h3><h4>PART A</h4>
+                    <p>Multiple Choice | 55 Questions | 55 minutes | 40% of Exam Score</p>
+                    <ul id="partA">
+                        <li>Questions in sets of 2 to 5</li>
+                        <li>Analyze historical texts, interpretations, and evidence</li>
+                        <li>Primary and secondary source</li>
+                    </ul>
+                    <h4>PART B</h4>
+                    <p>Short Answer | 3 Questions | 40 minutes | 20% of Exam Score</p>
+                    <ul id="partB">
+                        <li>Analyze historians’ interpretations, historical sources, and propositions about history.</li>
+                        <li>Questions provide opportunities for you to demonstrate what you know best.</li>
+                        <li>Some questions include texts, images, graphs, or maps.</li>
+                        <li>You’ll have a choice between two options for the final required short- answer question, each one focusing on a different time period.</li>
+                    </ul>
+                    <h3>Section 2</h3><h4>PART A</h4>
+                    <p> Document Based | 1 Question | 60 minutes (includes a 15-minute reading period) | 25% of Exam Score</p>
+                    <ul id="partC">
+                        <li>Analyze historians'interpretations, historical sources, and propositions about history.</li>
+                        <li>Develop an argument supported by an analysis of historical evidence.</li>
+                        <li>The document-based question will focus on topics from periods 3-8.</li>
+                    </ul>
+                    <h4>PART B</h4>
+                    <p>Long Essay | 1 Question | 40 minutes | 15% of Exam Score</p>
+                    <ul id="partD">
+                        <li>Explain and analyze significant issues in U.S. history.</li>
+                        <li>Develop an argument supported by an analysis of historical evidence.</li>
+                        <li>You’ll select from one of three essay choices, each focusing on the same theme and skill but different time periods</li>
+                    </ul>
+                </div>
+                <div class = "col-sm-4">
+                    <img src="https://westwoodhorizon.com/wp-content/uploads/2018/04/AP.Exams_.Product_dd3deff2-7924-4dce-b562-a0b7b3f7ec99_1024x1024.png">
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

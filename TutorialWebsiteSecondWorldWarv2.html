@@ -1,0 +1,575 @@
+<!doctype HTML>
+<html>
+    <head>
+        <title> AP U.S. History Exam - World War II </title>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Gothic+A1" rel="stylesheet">
+
+        <link href="https://fonts.googleapis.com/css?family=Tajawal" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Sunflower:300" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Jura" rel="stylesheet">
+
+        <style>
+
+            #display{
+                background-color: rgb(236, 236, 236);
+            }
+
+            #display .navbar{
+                margin-bottom: 0;
+                background-color: #a50000;
+                border: 0;
+                font-size: 13px;
+                letter-spacing: 4px;
+                border-radius: 0;
+            }
+
+            #display .navbar-nav li a, #display .navbar-brand{
+                color: #fff;
+            }
+
+            #display .navbar-nav li a:hover, #display .navbar-nav li.active a {
+                color: #331ef4;
+                background-color: #fff;
+            }
+
+            #display .navbar-default .navbar-toggle {
+                border-color: transparent;
+                color: #fff;
+            }
+
+            #display #current{
+                border-bottom: 2px solid white;
+            }
+
+            #display .jumbotron {
+                text-align: center;
+                height:300px;
+
+
+                /*background-image: url("https://coverfiles.alphacoders.com/388/38820.jpg");*/
+                /*Website blocked by NYC DOE*/
+
+                background-image: url("https://image.ibb.co/fnR31T/38820.jpg");
+                background-repeat: no-repeat;
+                background-size: 100% 300px;
+                font-family: 'Jura', sans-serif;
+                color: rgba(255, 255, 255, 0.84);
+            }
+
+            #display .jumbotron h1 {
+                text-align: center;
+                text-shadow: 1px 1px 15px #000;
+                /*vertical-align: middle;
+                line-height: 200px;*/ 
+            }
+            
+            #display .container-fluid {
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+
+            #display .panel {
+                border: 1px solid #a50000;
+                /*border: 1px solid #0044ffd0;*/
+                /*border: 1px solid #0077ffd0;*/
+                /*border-radius:0;*/
+            }
+
+            #display .panel-heading {
+                color: #fff;
+                background-color: #a50000;
+                /*background-color: #0044ffd0;*/
+                /*background-color: #0077ffd0;*/
+                border-bottom: 1px solid transparent;
+                /*border-radius: 0px;*/
+            }
+
+            #secondww {
+                font-family: 'Tajawal', sans-serif;
+                font-size: 105%;
+                margin-left: 20px;
+                margin-right: 20px;
+            }
+
+            #display #n, #y, #p{
+                font-size: 11px;
+            }
+
+            #display button{
+                margin:0 auto;
+                display:block;
+
+                padding:0.5em 3em;
+                border:0.16em solid rgb(81, 101, 192);
+                text-transform:uppercase;
+                font-family:'Roboto',sans-serif;
+                font-weight:400;
+                color:rgb(81, 101, 192);
+                text-align:center;
+                transition: all 0.15s;
+                background-color: rgba(255, 255, 255, 0);
+            }
+
+            #display button:hover{
+                color:rgb(34, 62, 190);
+                border-color:rgb(34, 62, 190);
+            }
+
+            #secondww div{
+                border-bottom: 1px solid rgba(0, 0, 0, 0.315);
+                padding: 5px;
+                margin: 3px;
+                /*background-color: rgba(128, 128, 128, 0.2);*/
+            }
+
+            #check p{
+                padding: 5px;
+                margin: 3px;
+                border: 1px solid rgba(0, 0, 0, 0.315);
+                background-color: rgba(128, 128, 128, 0.2);
+                text-align: center;
+                font-family: 'Tajawal', sans-serif;
+                font-size: 110%;
+            }
+
+            h4{
+                font-weight: bold;
+            }
+
+            #quizHeader h4{
+                font-family: 'Tajawal', sans-serif;
+                text-align: center;
+                font-size: 20px;
+            }
+            
+            #quiz{
+                margin-top: 10px;
+            }
+
+
+        </style>
+
+        <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+        <script src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <script type="text/template" id="template">
+            <div class = "panel panel-default">
+                <div class = "panel-heading"> Question  {{qNum}}: {{info.Question}}</div>
+                <div class = "panel-body"> A. {{info.A}} </div>
+                <div class = "panel-body"> B. {{info.B}} </div>
+                <div class = "panel-body"> C. {{info.C}} </div>
+                <div class = "panel-body"> D. {{info.D}} </div>	
+                <div class = "panel-body"> E. {{info.E}} </div>	
+                <div class = "panel-footer">
+                    <input type="text" id="{{qKey}}" placeholder="Choice letter">
+                </div>
+            </div>
+        </script>
+
+        <script>
+            /*
+            A. Zheng, K. Xia, J. Hu
+            7 May 2018
+            */
+            var data;
+            function getData(){
+                $.getJSON("https://tutorial-project-9806b.firebaseio.com/SecondWorldWarQuiz/.json", function(result){
+                    data = result;
+                    displayQuiz();
+                })
+            }
+
+            function displayQuiz(){
+                var build="";
+                var questions=0;
+                var template = document.getElementById("template").innerHTML;
+
+                for (var key in data){
+                    questions++;
+                    quesJSON ={
+                        "info": data[key], 
+                        "qKey": key,
+                        "qNum": questions
+				    }
+                    build += Mustache.render(template, quesJSON);
+                    document.getElementById("quiz").innerHTML = build;
+                }
+            }
+
+            function checkAnswers(){
+                var score = 0;
+                var count = 0;
+                for (var key in data){
+                    var correctAns = data[key].Answer;
+                    var userAns = document.getElementById(key).value;
+                    count++;
+                    if (userAns.toUpperCase() == correctAns){
+                        score++;
+                    }
+                }
+                var grade = (score/count)*100;
+                
+                document.getElementById("check").innerHTML = "<p> You scored " + grade + "%. You answered " + score + " out of " + count + " questions correctly.";
+            }
+
+        </script>
+    </head>
+
+    <body id = "display" onload = "getData()">
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">AP U.S. History</a>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="index.htm"><span class="glyphicon glyphicon-home"></span>&nbsp Home</a></li>
+                        <li><a href="TutorialWebsiteColonialv2.html">Colonial Era</a></li>
+                        <li><a href="TutorialWebsiteImmigrationv2.html">Immigration</a></li>
+                        <li><a href="TutorialWebsiteFirstWorldWarv2.html">World War I</a></li>
+                        <li id="current"><a href="TutorialWebsiteSecondWorldWarv2.html">World War II</a></li>
+                        <li><a href="TutorialWebsiteAboutv2.html">About</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class = "jumbotron">
+            <h1>WORLD WAR II</h1>
+        </div>
+
+        <div class="container">
+                <div id="myCarousel" class="carousel slide" data-ride="carousel">
+
+                    <ol class="carousel-indicators">
+                        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#myCarousel" data-slide-to="1"></li>
+                        <li data-target="#myCarousel" data-slide-to="2"></li>
+                    </ol>
+                  
+
+                    <div class="carousel-inner">
+                        <div class="item active">
+                            <img src="https://cdn.cnn.com/cnnnext/dam/assets/140828132531-01-world-war-ii-0828-horizontal-large-gallery.jpg" alt="German Troops March Through Occupied Warsaw, Poland After Invasion" style="width:100%;">
+                            <div class="carousel-caption">
+                                <h3>German Troops March Through Occupied Warsaw, Poland After Invasion</h3>
+                            </div>
+                        </div>
+                    
+                        <div class="item">
+                            <img src="https://www.telegram.ee/wp-content/uploads/2016/02/PILT-8-Nagasaki-1945.jpg" alt="Aftermath of Nagasaki Atomic Bombing" style="width:100%;">
+                            <div class="carousel-caption">
+                                <h3>Aftermath of Nagasaki Atomic Bombing</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="item">
+                            <img src="http://photos.vanityfair.com/2015/05/07/554b80901aaec7043ea433df_rosie-the-riveter-world-war-ii-identity-03.jpg" alt="World War II Rosie the Riveter Poster" style="width:100%;">
+                            <div class="carousel-caption">
+                                <h3>World War II Rosie the Riveter Poster</h3>
+                            </div>
+                        </div>
+                    </div>
+                  
+                    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div> 
+        
+        <div id = "secondww">
+            <div>
+                <h4>Big Ideas Before the War</h4>
+                <ul>
+                    <li><i><u>Great Depression</u></i> affected the U.S and the world drastically</li>
+                    <ul>
+                        <li>Many countries focused on <i><u>isolation</u></i>, and improving their own situation</li>
+                    </ul>
+                    <li><i><u>Kellogg-Briand Pact (1928)</u></i>: international agreement in which signatory states promised not to use war to resolve "disputes or conflicts of whatever nature or of whatever origin they may be, which may arise among them".
+                        <ul>
+                            <li>Made war illegal.</li>
+                            <li>No enforcement mechanism.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Fascist Governments</u></i>: a form of radical authoritarian nationalism, characterized by dictatorial power, forcible suppression of opposition and control of industry and commerce.
+                        <ul>
+                            <li>Italy – Benito Mussolini.</li>
+                            <li>Germany – Adolph Hitler.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Communist Governments</u></i>: a political theory derived from Karl Marx, advocating class war and leading to a society in which all property is publicly owned and each person works and is paid according to their abilities and needs.
+                        <ul>
+                            <li>Soviet Union – Joseph Stalin.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Stimson Doctrine</u></i>: the policy of nonrecognition of states created as a result of aggression.
+                        <ul>
+                            <li>US response to the Japanese invasion of Manchuria (1931).</li>
+                            <li>US would not recognize any land gained by Japan.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Nye Committee</u></i>: formed to investigate whether or not munitions manufacturers and bankers were pro-war in WWI soley to make profit.
+                        <ul>
+                            <li>Increased anti-war atmosphere and push to pass Neutrality Acts. <a href="#NeutralityActs" id="n">(See Neutrality Acts (1935 - 1937))</a></li>
+                        </ul>
+                    </li>
+                    <li id="NeutralityActs"><i><u>Neutrality Acts (1935 – 1937)</u></i>
+                        <ul>
+                            <li>1935: Authorized the president to prohibit all arms shipments and to forbid US citizens to travel on the ships of belligerent nations.</li>
+                            <li>1936: Forbade the extension of loans and credits to belligerent nations.</li>
+                            <li>1937: Forbade the shipment of arms to the opposing sides in the civil war in Spain.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Panay Incident (1937)</u></i>: a Japanese attack on the American gunboat Panay while it was anchored in the Yangtze River outside Nanking, China on 12 December 1937. Japan and the United States were not at war at the time.
+                        <ul>
+                            <li>Leads to the <i><u>Quarantine Speech</u></i>: President Franklin D. Roosevelt encouraged economic embargoes on aggressive nations (Roosevelt intended to influence peaceful nations to get together and bring about an isolation of aggressive nations).</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Appeasement</u></i>: (in an international context) a diplomatic policy of making political or material concessions to an aggressive power in order to avoid conflict.
+                        <ul>
+                            <li>Major cause of the war – giving in to the demands of an aggressor (Hitler).</li>
+                            <li><i><u>Munich Conference (1938)</u></i>: Parts of Czechoslovakia were given to Germany; Hitler promised not to take more land.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4>The Two Sides</h4>
+                <ul>
+                    <li><i><u>Allied Powers</u></i>
+                        <ul>
+                            <li>Great Britain, the United States, the Soviet Union and China (also known as the "Big Four")</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Axis Powers</u></i>
+                        <ul>
+                            <li>Nazi Germany, the Kingdom of Italy and the Empire of Japan</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4>World War II – U.S. Entrance</h4>
+                <ul>
+                    <li><i><u>Nazi-Soviet Nonaggression Pact (August, 1939)</u></i>: the two countries, Nazi Germany and Soviet Union, agreed to take no military action against each other for the next 10 years.</li>
+                    <li><i><u>German invasion of Poland (September 1, 1939)</u></i>
+                        <ul>
+                            <li>Seen as the start of World War II.</li>
+                            <li>September 1, 1939, Hitler says "Poland’s mine”.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Neutrality Act of 1939</u></i>: U.S could sell weapons to democracies via “cash and carry”.
+                        <ul>
+                            <li>Countries must pay in cash in full and pick up goods themselves.</li>
+                        </ul>
+                    </li>
+                    <li>Isolationists vs. Interventionists
+                        <ul>
+                            <li>Committee to Defend America – Interventionists</li>
+                            <li>America First Committee – Isolationists (Charles Lindbergh)</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Lend-Lease Act (1941)</u></i>: U.S could lend crucial supplies to countries the president deems vital.</li>
+                    <li><i><u>Attack on Pearl Harbor</u></i>: The attack on Pearl Harbor was a surprise military strike by the Imperial Japanese Navy Air Service against the United States naval base at Pearl Harbor, Hawaii Territory, on the morning of December 7, 1941.
+                        <ul>
+                            <li>US declared war on Japan and Germany immediately after.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4>Key Events During the War</h4>
+                <ul>
+                    <li><i><u>Manhattan Project</u></i>: a secret research and development undertaking during World War II that produced the first nuclear weapons. It was led by the United States with the support of the United Kingdom and Canada.
+                        <ul>
+                            <li>Led by Robert Oppenheimer, an American nuclear physicist and director of the Los Alamos Laboratory (Manhattan Project). Known as “the father of the atomic bomb”.</li>
+                            <li>Albert Einstein influenced the beginning of the Manhattan Project. In collaboration with Leo Szilard, Einstein wrote a letter to President Roosevelt in 1939, warning of possible German nuclear weapons research and proposing that the United States begin its own research into atomic energy.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>D-Day (June 6, 1944)</u></i>: the Allied forces invaded northern France by means of beach landings in Normandy.
+                        <ul>
+                            <li>More than 160,000 Allied troops landed along a 50-mile stretch of heavily-fortified French coastline, to fight Nazi Germany on the beaches of Normandy, France.</li>
+                            <li>Gen. Dwight D. Eisenhower, who led the attack, called the operation a crusade in which, “we will accept nothing less than full victory.”</li>
+                            <li>More than 5,000 Ships and 13,000 aircraft supported the D-Day invasion, and by day’s end, the Allies gained a foot-hold in Continental Europe.</li>
+                            <li>More than 9,000 Allied soldiers were killed or wounded.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Yalta Conference</u></i><a href="#YaltaConference" id="y">(See Important World War II Conferences – Yalta Conference)</a>
+                        <ul>
+                            <li>Stalin (Soviet Union), Franklin D. Roosevelt (U.S), and Churchill (Britain)</li>
+                            <li>Stalin promised free elections in Eastern Europe</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Potsdam Conference</u></i><a href="#PotsdamConference" id="p">(See Important World War II Conferences – Potsdam Conference)</a>
+                        <ul>
+                            <li>Japan given an ultimatum to surrender.</li>
+                            <li>Truman hinted to Stalin about a new weapon.</li>
+                            <li>Truman wanted to hold Stalin to agreements at Yalta.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Holocaust</u></i>: a genocide during World War II in which Nazi Germany, aided by its collaborators, systematically murdered approximately 6 million European Jews, around two-thirds of the Jewish population of Europe, between 1941 and 1945.
+                        <ul>
+                            <li>Millions of non-Jews were killed as well.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4>Home Front During World War II</h4>
+                <ul>
+                    <li>Women in World War II
+                        <ul>
+                            <li><i><u>“Rosie the Riveter”</u></i> – Films, magazines, etc.
+                                <ul>
+                                    <li>Rosie the Riveter was a cultural icon of World War II, representing the women who worked in factories and shipyards during World War II, many of whom produced munitions and war supplies.</li>
+                                    <li>Millions of women took jobs in factories.</li>
+                                    <li>Incomes increased.</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>Japanese-Americans 
+                        <ul>
+                            <li>Executive Order 9066 – Japanese Internment Camps</li>
+                            <li>Over 100,000 Japanese-Americans on West coast were moved to camps</li>
+                            <li>Upheld in Supreme Court Case <i><u>Korematsu v. US (1944)</u></i></li>
+                        </ul>
+                    </li>
+                    <li>Mexican-Americans 
+                        <ul>
+                            <li>Increase in workers from Mexico through the <i><u>Bracero Program</u></i>.
+                                <ul>
+                                    <li>Program established by agreement with the Mexican government to recruit temporary Mexican agricultural workers to the United States to make up for wartime labor shortages in the Far West. The program persisted until 1964, by when it had sponsored 4.5 million border crossings.</li>
+                                </ul>
+                            </li>
+                            <li><i><u>Zoot-Suit Riots</u></i>: a series of conflicts in June 1943 in Los Angeles, California, United States, which pitted European American servicemen (sailors and marines) stationed in Southern California against Mexican American youths and other minorities who were residents of the city.</li>
+                        </ul>
+                    </li>
+                    <li>Growth of the <i><u>“Sunbelt”</u></i> in the Southwest and Southern U.S – new industries
+                        <ul>
+                            <li>From the Carolinas to California, characterized by warm climate and recently, rapid population growth.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4>End of World War II</h4>
+                <ul>
+                    <li><i><u>Atomic Bombing of Hiroshima (August 6, 1945)</u></i>
+                        <ul>
+                            <li>The first atomic bomb, Little Boy, was dropped on Hiroshima, Japan.</li>
+                            <li>Dropped by the B-29 Superfortress bomber <i><u>Enola Gay</u></i>, piloted by Colonel Paul Tibbets. Enola Gay's name has gone down in history as the plane that was responsible for ending World War II.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Atomic Bombing of Nagasaki (August 9, 1945)</u></i>
+                        <ul>
+                            <li>The second atomic bomb, Fat Man, was dropped on Nagasaki, Japan.</li>
+                            <li>Dropped by the B-29 Superfortress bomber <i><u>Bockscar</u></i>, piloted by Major General Charles W. Sweeney.</li>
+                        </ul>
+                    </li>
+                    <li>Truman had used the atomic weapons in order to save American lives. His decision was questionable at the time – "Truman's Dilemma".</li>
+                    <li><i><u>Japanese Instrument of Surrender (September 2, 1945)</u></i>: the written agreement that formalized the surrender of the Empire of Japan, marking the end of World War II.
+                        <ul>
+                            <li>Representatives from the Japanese government and Allied forces assembled aboard the USS Missouri in Tokyo Bay to sign the treaty.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Paris Peace Treaties (1947)</u></i>: signed on 10 February 1947, as the outcome of the <i><u>Paris Peace Conference</u></i>, held from 29 July to 15 October 1946.
+                        <ul>
+                            <li>The victorious wartime Allied powers (principally the United Kingdom, Soviet Union, United States, and France) negotiated the details of peace treaties with Italy, the minor Axis powers (Romania, Hungary, Bulgaria), and Finland, following the end of World War II in 1945.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>United Nations (UN)</u></i>:  an intergovernmental organization tasked to promote international cooperation and to create and maintain international order.
+                        <ul>
+                            <li>US is one of five permanent members of security council.</li>
+                            <li>Took over for the defunct League of Nations (which the U.S did not join).</li>
+                        </ul>
+                    </li>
+                    <li>Beginning of the Cold War
+                        <ul>
+                            <li><i><u>North Atlantic Treaty Organization (NATO)</u></i>: main purpose was to defend each other from the possibility of communist Soviet Union taking control of their nation.</li>
+                            <li>First U.S peace-time alliance in history.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4>Important World War II Conferences</h4>
+                <ul>
+                    <li>Atlantic Charter
+                        <ul>
+                            <li>August 1941</li>
+                            <li>U.S (Franklin D. Roosevelt) and Britain (Churchill)</li>
+                            <li>First wartime meeting</li>
+                            <li>They outlined the goals for post-WWII</li>
+                            <li>Goals included self-determination, lower trade barriers, economic cooperation</li>
+                        </ul>
+                    </li>
+                    <li>Casablanca Conference
+                        <ul>
+                            <li>January 1943 in Casablanca, Morocco</li>
+                            <li>U.S (Franklin D. Roosevelt) and Britain (Churchill)</li>
+                            <li>Stalin could not attend - Stalingrad</li>
+                            <li>They agreed on <i><u>Casablanca Declaration</u></i>: Called for unconditional surrender of Axis powers</li>
+                        </ul>
+                    </li>
+                    <li>Tehran Conference
+                        <ul>
+                            <li>Late November – early December 1943</li>
+                            <li>U.S (Franklin D. Roosevelt), Britain (Churchill) and Soviet Union (Stalin)</li>
+                            <li>First “Big Three” wartime meeting</li>
+                            <li>They agreed on invasion of Europe in 1944 and that USSR would join war against Japan after Germany was defeated.</li>
+                            <li>Issues: Stalin wanted to control parts of Eastern Europe</li>
+                        </ul>
+                    </li>
+                    <li id="YaltaConference">Yalta Conference
+                        <ul>
+                            <li>February, 1945 – two months prior to Franklin D Roosevelt’s death</li>
+                            <li>U.S (Franklin D. Roosevelt), Britain (Churchill) and Soviet Union (Stalin)</li>
+                            <li>Stalin agreed to free elections in Eastern Europe
+                                <ul>
+                                    <li>Promised elections in Poland – never came true</li>
+                                </ul>
+                            </li>
+                            <li>USSR would join the United Nations</li>
+                            <li>Germany would be divided into different zones</li>
+                        </ul>
+                    </li>
+                    <li id="PotsdamConference">Potsdam Conference
+                        <ul>
+                            <li>July - August, 1945</li>
+                            <li>US (Truman), Britain (Atlee), Soviet Union (Stalin)</li>
+                            <li>Japan given an ultimatum to surrender
+                                <ul>
+                                    <li>Truman hinted to Stalin about a new weapon</li>
+                                </ul>
+                            </li>
+                            <li>Truman wanted to hold Stalin to agreements at Yalta
+                                <ul>
+                                    <li>He saw it as a “pact”</li>
+                                </ul>
+                            </li>
+                            <li>Issues: With the war ending, differences quickly emerged</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <br>
+        <div id = "quizHeader"><h4>World War II Quiz</h4></div>
+        <br>
+        <div class = "container" id = "quiz"></div>
+        <button onclick="checkAnswers()">Check Answers</button><br>
+        <div id = "check"></div>
+    </body>
+</html>

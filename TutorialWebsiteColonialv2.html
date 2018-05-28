@@ -1,0 +1,396 @@
+<!doctype HTML>
+<html>
+    <head>
+        <title> AP U.S. History Exam - Colonial Era </title>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Gothic+A1" rel="stylesheet">
+
+        <link href="https://fonts.googleapis.com/css?family=Tajawal" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Sunflower:300" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Jura" rel="stylesheet">
+
+        <style>
+
+            #display{
+                background-color: rgb(236, 236, 236);
+            }
+
+            #display .navbar{
+                margin-bottom: 0;
+                background-color: #a50000;
+                border: 0;
+                font-size: 13px;
+                letter-spacing: 4px;
+                border-radius: 0;
+            }
+
+            #display .navbar-nav li a, #display .navbar-brand{
+                color: #fff;
+            }
+
+            #display .navbar-nav li a:hover, #display .navbar-nav li.active a {
+                color: #331ef4;
+                background-color: #fff;
+            }
+
+            #display .navbar-default .navbar-toggle {
+                border-color: transparent;
+                color: #fff;
+            }
+
+            #display #current{
+                border-bottom: 2px solid white;
+            }
+
+            #display .jumbotron {
+                text-align: center;
+                height:300px;
+                background-image: url("http://www.loc.gov/teachers/classroommaterials/connections/amrev-maps/images/section_header.jpg");
+                background-repeat: no-repeat;
+                background-size: 100% 300px;
+                font-family: 'Jura', sans-serif;
+                color: rgba(255, 255, 255, 0.84);
+            }
+
+            #display .jumbotron h1 {
+                text-align: center;
+                text-shadow: 1px 1px 15px #000;
+                /*vertical-align: middle;
+                line-height: 200px;*/ 
+            }
+            
+            #display .container-fluid {
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+
+            #colonial {
+                font-family: 'Tajawal', sans-serif;
+                font-size: 105%;
+                margin-left: 20px;
+                margin-right: 20px;
+            }
+
+            #display #r, #j {
+                font-size: 11px;
+            }
+
+            #display button{
+                margin:0 auto;
+                display:block;
+
+                padding:0.5em 3em;
+                border:0.16em solid rgb(81, 101, 192);
+                text-transform:uppercase;
+                font-family:'Roboto',sans-serif;
+                font-weight:400;
+                color:rgb(81, 101, 192);
+                text-align:center;
+                transition: all 0.15s;
+                background-color: rgba(255, 255, 255, 0);
+            }
+
+            #display button:hover{
+                color:rgb(34, 62, 190);
+                border-color:rgb(34, 62, 190);
+            }
+
+            #display .panel {
+                border: 1px solid #a50000;
+                /*border: 1px solid #0044ffd0;*/
+                /*border: 1px solid #0077ffd0;*/
+                /*border-radius:0;*/
+            }
+
+            #display .panel-heading {
+                color: #fff;
+                background-color: #a50000;
+                /*background-color: #0044ffd0;*/
+                /*background-color: #0077ffd0;*/
+                border-bottom: 1px solid transparent;
+                /*border-radius: 0px;*/
+            }
+
+            #colonial div{
+                border-bottom: 1px solid rgba(0, 0, 0, 0.315);
+                padding: 5px;
+                margin: 3px;
+                /*background-color: rgba(128, 128, 128, 0.2);*/
+            }
+
+            #check p{
+                padding: 5px;
+                margin: 3px;
+                border: 1px solid rgba(0, 0, 0, 0.315);
+                background-color: rgba(128, 128, 128, 0.2);
+                text-align: center;
+                font-family: 'Tajawal', sans-serif;
+                font-size: 110%;
+            }
+
+            h4{
+                font-weight: bold;
+            }
+
+            #quizHeader h4{
+                font-family: 'Tajawal', sans-serif;
+                text-align: center;
+                font-size: 20px;
+            }
+            
+            #quiz{
+                margin-top: 10px;
+            }
+
+
+        </style>
+
+        <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/mustache.js/2.3.0/mustache.min.js"></script>
+        <script src = "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+        <script type="text/template" id="template">
+            <div class = "panel panel-default">
+                <div class = "panel-heading"> Question  {{qNum}}: {{info.Question}}</div>
+                <div class = "panel-body"> A. {{info.A}} </div>
+                <div class = "panel-body"> B. {{info.B}} </div>
+                <div class = "panel-body"> C. {{info.C}} </div>
+                <div class = "panel-body"> D. {{info.D}} </div>	
+                <div class = "panel-body"> E. {{info.E}} </div>	
+                <div class = "panel-footer">
+                    <input type="text" id="{{qKey}}" placeholder="Choice letter">
+                </div>
+            </div>
+        </script>
+
+        <script>
+            /*
+            A. Zheng, K. Xia, J. Hu
+            7 May 2018
+            */
+            var data;
+            function getData(){
+                $.getJSON("https://tutorial-project-9806b.firebaseio.com/ColonialQuiz/.json", function(result){
+                    data = result;
+                    displayQuiz();
+                })
+            }
+
+            function displayQuiz(){
+                var build="";
+                var questions=0;
+                var template = document.getElementById("template").innerHTML;
+
+                for (var key in data){
+                    questions++;
+                    quesJSON ={
+                        "info": data[key], 
+                        "qKey": key,
+                        "qNum": questions
+				    }
+                    build += Mustache.render(template, quesJSON);
+                    document.getElementById("quiz").innerHTML = build;
+                }
+            }
+
+            function checkAnswers(){
+                var score = 0;
+                var count = 0;
+                for (var key in data){
+                    var correctAns = data[key].Answer;
+                    var userAns = document.getElementById(key).value;
+                    count++;
+                    if (userAns.toUpperCase() == correctAns){
+                        score++;
+                    }
+                }
+                var grade = (score/count)*100;
+                
+                document.getElementById("check").innerHTML = "<p> You scored " + grade + "%. You answered " + score + " out of " + count + " questions correctly.";
+            }
+
+        </script>
+    </head>
+
+    <body id = "display" onload = "getData()">
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">AP U.S. History</a>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="index.htm"><span class="glyphicon glyphicon-home"></span>&nbsp Home</a></li>
+                        <li id="current"><a href="TutorialWebsiteColonialv2.html">Colonial Era</a></li>
+                        <li><a href="TutorialWebsiteImmigrationv2.html">Immigration</a></li>
+                        <li><a href="TutorialWebsiteFirstWorldWarv2.html">World War I</a></li>
+                        <li><a href="TutorialWebsiteSecondWorldWarv2.html">World War II</a></li>
+                        <li><a href="TutorialWebsiteAboutv2.html">About</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class = "jumbotron">
+            <h1>COLONIAL ERA</h1>
+        </div>
+
+        <div class="container">
+                <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                    <!-- Indicators -->
+                    <ol class="carousel-indicators">
+                        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                        <li data-target="#myCarousel" data-slide-to="1"></li>
+                        <li data-target="#myCarousel" data-slide-to="2"></li>
+                    </ol>
+                  
+                    <!-- Wrapper for slides -->
+                    <div class="carousel-inner">
+                        <div class="item active">
+                            <img src="http://1.bp.blogspot.com/_fcXZA7rEEeI/TK0laLqAhvI/AAAAAAAAAAQ/c93rmahEW40/w1200-h630-p-k-no-nu/JAMESTOWN_OVERVIEW_01.gif" alt="Jamestown, VA" style="width:100%;">
+                            <div class="carousel-caption">
+                                <h3>Jamestown, Virginia</h3>
+                            </div>
+                        </div>
+                    
+                        <div class="item">
+                            <img src="https://cdn.history.com/sites/2/2015/08/ask-roanoke-GettyImages-143231548-E.jpeg" alt="Lost Colony of Roanoke" style="width:100%;">
+                            <div class="carousel-caption">
+                                <h3>Lost Colony of Roanoke</h3>
+                            </div>
+                        </div>
+                        
+                        <div class="item">
+                            <img src="http://www.5minutehistory.com/wp-content/uploads/2014/10/massachusetts-bay-colony-salem-1159x544.jpg" alt="Massachusetts Bay Colony" style="width:100%;">
+                            <div class="carousel-caption">
+                                <h3>Massachusetts Bay Colony</h3>
+                            </div>
+                        </div>
+                    </div>
+                  
+                    <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                        <span class="glyphicon glyphicon-chevron-right"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+            </div> 
+        
+        <div id = "colonial">
+            <div>
+                <h4>Early European Contact (Columbus Exchange)</h4>
+                <ul>
+                    <li>Columbus’ arrival in the Bahamas in 1492 prompted the transmission and interchange of plants, animals, diseases, culture, human populations (i.e., slaves), and technology amount Europe, Africa, and the Americas. Benefited Europeans while bringing catastrophe to Native American populations.</li>
+                    <li>Native Americans died from European illnesses such as smallpox, typhus, cholera, and measles, through interaction with the Europeans. (Were not immune to the disease)</li>
+                    <li>The damage done by the disease on the Native American population not only inhibited their ability to repel European encroachment, but also prevented the invaders from exploiting the Indians for labor as planned.</li>
+                    <li>To make up for the lost labor source, colonists turned to West Africa from where they began importing slaves as early as 1518.</li>
+                    <li>Native Americans carefully altered their natural environment through hunting, fishing, forest-burning, field-clearing, and using plants for nutritional or medicinal purposes.</li>
+                    <li>On the other hand, Europeans dramatically reshaped American nature: they destroyed forests to obtain lumber and establish farms. The subsequent farming activities such as plowing and grazing by livestock caused the natural, enriched soil to dry up and corrode.</li>
+                </ul>
+            </div>
+            <div>
+                <h4>English Exploration</h4>
+                <ul>
+                    <li>1585 <i><u>Sir Walter Raleigh</u></i> sponsored <i><u>John White</u></i>’s expedition (with ~100 male colonists) to the New World and found Roanoke, a miniscule island off the North Carolina coast. Surrounded by perilous sandbanks that protected them from Spanish discovery, but also made it difficult for English ships to deliver supplies or load commodities. In addition, soil was sandy and arid, making it difficult for farming and harvesting crops. The colony was abandoned on June 1585.</li>
+                    <li>Two years after initial settlement (May 1587), John White led another 94 colonists (including 17 women and 9 children), to Roanoke. Returned to England in August 1587 to replenish supplies. When he went back to the colony in 1590, the colony had vanished. <a href="#Roanoke" id="r">(See Early English Colonial Settlements – Roanoke, NC)</a></li>
+                    <li>Two years after Treaty of London, the <i><u>Virginia Company</u></i> was incorporated by its investors in London and King James granted a charter to colonize and govern Virginia. The Virginia Company, its employ, and English colonists arrived in Chesapeake Bay in April 26, 1607. <a href="#Jamestown" id="j">(See Early English Colonial Settlements – Jamestown, VA)</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4>English Colonization</h4>
+                <ul>
+                    <li>Between 1550 and 1600, England’s population increased from 3 million to 4 million which was not economically stable, resulting in half of the population living at or below the poverty line.</li>
+                    <li>Encouraged emigration to New World, advertised as utopia where lower classes could achieve some economic independence by obtaining property – land ownership (which Europeans believed to be the basis of liberty).</li>
+                    <li>Half a million people immigrated to New World from England, Ireland, and West Indies.</li>
+                    <li><i><u>Charters</u></i>: exclusive rights and privileges granted by the Parliament.
+                        <ul>
+                            <li>Charters were granted to <i><u>Sir Humphrey Gilbert</u></i> and <i><u>Sir Walter Raleigh</u></i>, permitting them to found colonies in North America at their own expenses.</li>
+                            <li>Raleigh’s colony, Roanoke, and Gilbert’s colony on Newfoundland both failed.</li>
+                        </ul>
+                    </li>
+                    <li>Motives for colonizing – religion, profit, and prestige (Three G’s – Gold, God, and Glory).</li>
+                    <li>France focused on colonizing Canada. Spain focused on South America. This leaves US open to exploration and colonization by the English.</li>
+                    <li><i><u>Indentured Servitude</u></i>: A person who came to America and was placed under contract to work for another over a period of time, usually seven years, especially during the 17th to 19th centuries.
+                        <ul>
+                            <li>English emigrants who could afford passage to the New World arrived there as free and were quickly given land. However, 2/3 of English colonists who emigrated during 17th century offered up 5-7 years of their freedom in exchange for passage to Americas.</li>
+                            <li>Could not marry without their master’s permission, could be bought and sold, and were subject to corporal punishment.</li>
+                            <li>If a female servant became pregnant, her term of indenture was prolonged. </li>
+                            <li>These rules were upheld and imposed by court. </li>
+                            <li>If an indentured servant survived, he or she received payment in the form of <i><u>freedom dues</u></i> and were thus considered free members of society.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Puritanism</u></i>: The Puritans were a group of people who grew discontent in the Church of England and worked towards religious, moral and societal reforms. Emerged in the late 16th century, eventually described a religious code and a king of societal organization that was perceived as ideal by its proponents.
+                        <ul>
+                            <li>Believed Church of England’s religious ceremonies and teaching were too reminiscent of Catholicism. Believed that religion was complex and true believers ought to read the Bible for themselves and listen to sermons of an educated clergy.</li>
+                            <li>In 1620s and 1630s, Charles I was reinstating ceremonies that resembled those of the recently replaced Catholicism. Along with that, the Church of England dismissal of Puritan ministers and censorship of their writings encouraged Puritans to emigrate to the New World where the sought freedom to worship and live in a society that adhered to what they believed to be true Christian principles.</li>
+                            <li>Belied in domestic male authority as well as limiting married women’s legal and economic liberties. A patriarch’s control over his wife, children, and servants was deemed the foundation of social security. </li>
+                            <li>While women were cast lower in sociopolitical spheres, they were considered the spiritual equals of men and were allowed to be full church participants. A woman’s responsibility as a wife and mother was the basis of her identity.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Navigation Acts</u></i>: In 1651, British Parliament, then led by Oliver Cromwell, passed this act, intending to supersede (replace) Dutch control of international trade. 
+                        <ul>
+                            <li>Colonial commodities such as tobacco and sugar (the most profitable goods) had to be exported to England in English ship and sold in English ports before they could be re-exported to other nations’ markets. Brought income to English merchants and also profited the crown through the taxation placed on goods.</li>
+                            <li><i><u>Mercantilism</u></i>: Theory that government control economic pursuits to advocate national power. Role of colonies was to export raw materials to and import manufactured goods from England.</li>
+                        </ul>    
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4>American Slavery</h4>
+                <ul>
+                    <li>Unlike indentured servants, African slaves could not claim the rights of Englishmen and had indefinite terns of labor. Also, African men were much more familiar with rigorous agricultural labor and were immune to European diseases unlike the Native American populations.</li>
+                    <li><i><u>Middle Passage</u></i>: part of Triangular trade among Europe, Africa, and the Americas, in which Africans were transported across the Atlantic to the New World.
+                        <ul>
+                            <li>African people were tightly crammed into ships to maximize profits and many succumbed to diseases. 20% of enslaved Africans died before reaching the New World. Most landed in Brazil or West Indies to work on sugar plantations.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+            <div>
+                <h4>Early English Colonial Settlements</h4>
+                <ul>
+                    <li id="Roanoke"><i><u>Roanoke, NC</u></i>: Failed Colony – arrived and was short on supplies. Colonists did not cooperate – were nobles and only cared about gold. Indian attacks. John White (Leader) returned to England for 3 years (constant war between Britain and Spain, so couldn’t return, which was later ended by <i><u>Treaty of London</u></i>) to replenish supplies. Colony was gone (vanished) upon return. </li>
+                    <li id="Jamestown"><i><u>Jamestown, VA</u></i>: Settled near James River by ~100 members of joint venture Virginia Company. Same problems as Roanoke as well as famine. Was about to become failure until arrival of new group of settlers and supplies. Tobacco (introduced by <i><u>John Rolfe</u></i> in 1611) became profitable export.
+                        <ul>
+                            <li>Would’ve also become failure if not for <i><u>John Smith</u></i>’s ironclad rule, requiring colonists to partake in forced labor.</li>
+                            <li><i><u>Headright System</u></i>: Established in 1618 by the Virginia Company to attract more colonists, which gives 50 acres of lands to any settlers who paid for his own – or someone else’s – passage to the New World.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Plymouth, MA</u></i>: ~100 Englishmen and women (most English separatist church) boarded Mayflower and settled in Plymouth (1620). More than half died on first winter. Peace with neighboring Indians (Wampanoag). Strictly religious.
+                        <ul>
+                            <li><i><u>Body of Liberties</u></i>: Issued by the General Court in 1641. Allowed for free speech, assembly, and protection under the law, but also authorized the death penalty for the worship of false gods, blasphemy, and witchcraft.</li>
+                            <li><i><u>Great Migration</u></i>: Puritan families ventured across the Atlantic to Massachusetts during the 1630s, seeking religious freedom.</li>
+                        </ul>
+                    </li>
+                    <li><i><u>Providence, RI</u></i>: Founded by Roger Williams and his followers (+ Anna Hutchison) after leaving MA colony. Allowed religious tolerance.</li>
+                    <li><i><u>Pennsylvania, PA</u></i>: Founded by William Penn and his followers (Quakers). Allows religious tolerance and equal rights.</li>
+                </ul>
+            </div>
+            <div>
+                <h4>Early Colonial Representative Government</h4>
+                <ul>
+                    <li><i><u>Mayflower Compact</u></i>: Half pilgrims were Protestants and half weren’t. William Bradford brought colonists together with Mayflower Compact. Consent of the governed.</li>
+                    <li><i><u>Virginia House of Burgesses</u></i>: Consent of the governed. Meets up once per year to make new laws. Dissolved after refusing to pay British taxes.</li>
+                    <li><i><u>Fundamental Orders</u></i>: the first “constitution” in colonial America. Established the Hartford government in 1639. Modeled itself after the government of Massachusetts Bay Colony, but the document called for the power of government to be derived from the governed, who did not have to be church members to vote.
+                        <ul>
+                            <li>Prominent Puritan leader <i><u>Thomas Hooker</u></i>, after dissenting with other Massachusetts authorities, moved to and established a settlement at Hartford, Connecticut, in 1636.</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <br>
+        <div id = "quizHeader"><h4>Colonial Era Quiz</h4></div>
+        <br>
+        <div class = "container" id = "quiz"></div>
+        <button onclick="checkAnswers()">Check Answers</button><br>
+        <div id = "check"></div>
+    </body>
+</html>
