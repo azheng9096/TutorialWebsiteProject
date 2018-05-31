@@ -41,6 +41,10 @@
                 color: #fff;
             }
 
+            #display .icon-bar{
+                background-color: white;
+            }
+
             #display #current{
                 border-bottom: 2px solid white;
             }
@@ -82,7 +86,7 @@
                 font-size: 11px;
             }
 
-            #display button{
+            #display #buttonCheck{
                 margin:0 auto;
                 display:block;
 
@@ -97,7 +101,7 @@
                 background-color: rgba(255, 255, 255, 0);
             }
 
-            #display button:hover{
+            #display #buttonCheck:hover{
                 color:rgb(34, 62, 190);
                 border-color:rgb(34, 62, 190);
             }
@@ -223,6 +227,11 @@
         <nav class="navbar navbar-default">
             <div class="container">
                 <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>                        
+                    </button>
                     <a class="navbar-brand" href="#">AP U.S. History</a>
                 </div>
                 <div class="collapse navbar-collapse" id="myNavbar">
@@ -528,7 +537,7 @@
         <div id = "quizHeader"><h4>World War I Quiz</h4></div>
         <br>
         <div class = "container" id = "quiz"></div>
-        <button onclick="checkAnswers()">Check Answers</button><br>
+        <button onclick="checkAnswers()" id="buttonCheck">Check Answers</button><br>
         <div id = "check"></div>
     </body>
 </html>
